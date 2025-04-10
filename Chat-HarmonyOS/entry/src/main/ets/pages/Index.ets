@@ -55,7 +55,7 @@ struct Index {
       onMessageReceived: (messages: ChatMessage[]): void => {
         let content = 'receive message: ';
         messages.forEach(message => {
-          content += "\nid: "+message.getMsgId() + " type: "+message.getType();
+          content += "\nid: "+message.getMsgId() + " type: "+ContentType[message.getType()];
           if (message.getType() === ContentType.TXT) {
             content += " content: " + ((message.getBody() as TextMessageBody).getContent());
           }
