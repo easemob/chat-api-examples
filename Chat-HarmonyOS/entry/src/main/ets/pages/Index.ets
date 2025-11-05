@@ -1,8 +1,9 @@
-import { ChatClient, ChatOptions, ChatMessage,
+import { ChatClient, ChatMessage,
   TextMessageBody, ContentType, ChatMessageListener,
   ChatCallback, ChatError } from '@easemob/chatsdk';
 import { Prompt } from '@kit.ArkUI';
 import intl from '@ohos.intl'
+import { Context } from '@ohos.arkui.UIContext';
 
 @Entry
 @Component
@@ -13,14 +14,16 @@ struct Index {
   @State to: string = '';
   @State content: string = '';
   private appKey: string = '';
-  scroller: Scroller = new Scroller();
+  private scroller: Scroller = new Scroller();
+  private context: Context | undefined = this.getUIContext().getHostContext();
 
   private initSDK() {
-    let options = new ChatOptions({
-      appKey: this.appKey
-    });
-    options.setAutoLogin(false);
-    ChatClient.getInstance().init(getContext(this), options);
+    if (this.context) {
+      ChatClient.getInstance().init(this.context, {
+        appKey: this.appKey,
+        isAutoLogin: false
+      })
+    }
   }
 
   private login(userId: string, pwd: string) {
