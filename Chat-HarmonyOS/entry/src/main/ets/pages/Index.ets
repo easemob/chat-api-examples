@@ -1,6 +1,9 @@
 import { ChatClient, ChatMessage,
   TextMessageBody, ContentType, ChatMessageListener,
-  ChatCallback, ChatError } from '@easemob/chatsdk';
+  ChatCallback, ChatError,
+  CmdMessageBody,
+  ChatType,
+  CustomMessageBody} from '@easemob/chatsdk';
 import { Prompt } from '@kit.ArkUI';
 import intl from '@ohos.intl'
 import { Context } from '@ohos.arkui.UIContext';
@@ -13,21 +16,20 @@ struct Index {
   @State pwd: string = '';
   @State to: string = '';
   @State content: string = '';
-  private appKey: string = '';
+  private appKey: string = 'easemob#easeim';
   private scroller: Scroller = new Scroller();
   private context: Context | undefined = this.getUIContext().getHostContext();
 
   private initSDK() {
     if (this.context) {
       ChatClient.getInstance().init(this.context, {
-        appKey: this.appKey,
-        isAutoLogin: false
+        appKey: this.appKey
       })
     }
   }
 
   private login(userId: string, pwd: string) {
-    ChatClient.getInstance().login(userId, pwd).then(()=> {
+    ChatClient.getInstance().loginWithToken(userId, pwd).then(()=> {
       this.registerMessageListener();
       this.addLog("Login success!");
     }).catch((e: ChatError) => {
@@ -94,7 +96,7 @@ struct Index {
             this.userId = value;
           });
         Blank(10)
-        TextInput({placeholder:'密码', text: this.pwd})
+        TextInput({placeholder:'Token', text: this.pwd})
           .width('40%')
           .type(InputType.Password)
           .onChange((value)=> {
